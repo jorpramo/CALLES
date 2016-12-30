@@ -27,6 +27,7 @@ for k, v in set.categorias.items():
 categorias='|'.join(categorias)
 
 def categoriza(pagina):
+    print(pagina)
     result=re.findall(categorias,pagina)
     return result
 
@@ -38,8 +39,8 @@ def procesa_csv(fichero):
 
         spamreader = csv.reader(csvfile, delimiter=';')
         for row in spamreader:
-            i=+1
-            if (i>5):
+            i=i+1
+            if (i>3):
                 break
             print(row[3])
             result=wikipedia.search(row[3])
@@ -48,7 +49,7 @@ def procesa_csv(fichero):
                 try:
                     pag=wikipedia.page(cad)
                     #head = list(islice(pag.content, 10))
-                    categoria.append(categoriza(pag.content[:50]))
+                    categoria.append(categoriza(pag.content[:200].lower()))
                 except:
                     pass
             print(categoria)

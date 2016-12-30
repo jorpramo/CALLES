@@ -21,4 +21,5 @@ categorias={'LETRAS':'escritor|periodista|filosofo|historiador',
             'LUGAR':'barrio|población|ciudad|pueblo|país',
             'CIENCIA':'médico|doctor|investigador|físico|químico',
             'RELIGION':'cura|monja|santo|religioso',
-            'ARTE':'pintor|escultor|músico'}
+            'ARTE':'pintor|escultor|músico',
+            'POLITICA':'político|senador|abogado'}
