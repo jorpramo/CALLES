@@ -6,6 +6,7 @@ import wikipedia
 import settings
 from collections import Counter
 from fastkml import kml
+import operator
 import csv, re, os
 
 
@@ -22,15 +23,21 @@ def procesa_KML(fichero):
     for i in range(0,10):
         print(list_detallado[i].name)
 
-categorias=[]
-for k, v in settings.categorias.items():
-    categorias.append(v)
-categorias='|'.join(categorias)
+def categoriza(values, searchFor):
+    resultado={}
+    for k in values:
+        for v in values[k].split():
+                #print(k,v)
+                busqueda=re.findall(v,searchFor)
+                if (len(busqueda)>0):
+                    resultado[k]=resultado.get(k,0) + len(busqueda)
 
-def categoriza(pagina):
-    #print(pagina)
-    result=re.findall(categorias,pagina)
-    return result
+    if len(resultado)==0:
+        maximo=""
+    else:
+        maximo=max(resultado.items(), key=operator.itemgetter(1))[0]
+    #print(max(resultado.items(), key=operator.itemgetter(1))[0])
+    return maximo
 
 def procesa_csv(fichero):
     try:
@@ -53,44 +60,40 @@ def procesa_csv(fichero):
         for row in spamreader:
             total=total+1
             if (len(row)<=5) | (row[5]==''):
-                categoria=[]
+                categorias=settings.categorias
                 #buscamos por nombre primero
-                cat_temp=categoriza(row[3].lower()
+                cat_temp=categoriza(categorias,row[3].lower())
 
-                                    )
-                if (1==1):#len(cat_temp)!=0:
-                    categoria.append(cat_temp)
-                else:
+                if len(cat_temp)==0:
                     result=wikipedia.search(row[3])
                     print(row[3])
 
                     for cad in result[:1]:
                         try:
                             pag=wikipedia.page(cad)
-                            cat_temp=categoriza(pag.content[:200].lower())
-                            if cat_temp!='':
-
-                                categoria.append(cat_temp)
+                            cat_temp=categoriza(categorias,pag.content[:200].lower())
                         except:
                             pass
-                cat=[]
-                categoria=[item for sublist in categoria for item in sublist]
-                if len(categoria)>0:
-                    for k, v in settings.categorias.items():
-                        for c in categoria:
-                            if c in v:
-                                cat.append(k)
-                max=0
-                cat_final=''
-                if len(cat)>0:
-                    total_cat = total_cat + 1
-                    for unica in set(cat):
-                        cont=cat.count(unica)
-                        if cont>max:
-                            max=cont
-                            cat_final=unica
+                # cat=[]
+                # categoria=[item for sublist in categoria for item in sublist]
+                # if len(categoria)>0:
+                #     for k, v in settings.categorias.items():
+                #         for c in categoria:
+                #             if c in v:
+                #                 cat.append(k)
+                # max=0
+                # cat_final=''
+                # if len(cat)>0:
+                #     total_cat = total_cat + 1
+                #     for unica in set(cat):
+                #         cont=cat.count(unica)
+                #         if cont>max:
+                #             max=cont
+                #             cat_final=unica
 
-                writer.writerow([row[0], row[1],row[2],row[3],row[4],cat_final])
+                if cat_temp!="":
+                    total_cat = total_cat + 1
+                writer.writerow([row[0], row[1],row[2],row[3],row[4],cat_temp])
                 #texto.append(row[3].lower())
                 texto=texto +" "+  row[3].lower()
             else:
