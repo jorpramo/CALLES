@@ -8,7 +8,7 @@ from collections import Counter
 from fastkml import kml
 import operator
 import csv, re, os
-
+import google
 
 def procesa_KML(fichero):
     f = open(fichero, 'r')
@@ -64,6 +64,16 @@ def procesa_csv(fichero):
                 #buscamos por nombre primero
                 cat_temp=categoriza(categorias,row[3].lower())
 
+                #buscamos por google
+                if len(cat_temp)==0:
+                    search_results = google.search(row[3].lower() +" -calle -falla -carrer -linkedin -paginasamarillas -facebook", tld='es', lang='es', tbs='0', safe='off', num=5, stop=1)
+                    cad=[]
+                    [cad.append(result) for result in search_results]
+                    cad=' '.join(cad)
+                    cat_temp=categoriza(categorias,cad)
+                    print(row[3],cat_temp)
+
+                #buscamos por Wikipedia
                 if len(cat_temp)==0:
                     result=wikipedia.search(row[3])
                     print(row[3])
@@ -74,22 +84,6 @@ def procesa_csv(fichero):
                             cat_temp=categoriza(categorias,pag.content[:200].lower())
                         except:
                             pass
-                # cat=[]
-                # categoria=[item for sublist in categoria for item in sublist]
-                # if len(categoria)>0:
-                #     for k, v in settings.categorias.items():
-                #         for c in categoria:
-                #             if c in v:
-                #                 cat.append(k)
-                # max=0
-                # cat_final=''
-                # if len(cat)>0:
-                #     total_cat = total_cat + 1
-                #     for unica in set(cat):
-                #         cont=cat.count(unica)
-                #         if cont>max:
-                #             max=cont
-                #             cat_final=unica
 
                 if cat_temp!="":
                     total_cat = total_cat + 1

@@ -10,6 +10,7 @@ import csv, re, os
 
 import operator
 
+
 #pasa las categorias y el texto, devuelve la categoría mayor
 def search(values, searchFor):
     resultado={}
@@ -28,5 +29,12 @@ def search(values, searchFor):
     #print(max(resultado.items(), key=operator.itemgetter(1))[0])
     return maximo
 
-res=search(settings.categorias, "esto es gravador un cronista escriptor")
-print(res)
+#res=search(settings.categorias, "esto es gravador un cronista escriptor")
+#print(res)
+
+
+import google
+num_page = 4
+search_results = google.search("DON JUAN DE DIOS MONTAÑES -calle", tld='es', lang='es', tbs='0', safe='off', num=5, stop=1)
+for result in search_results:
+    print(result)
