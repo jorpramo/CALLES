@@ -33,15 +33,15 @@ def search(values, searchFor):
 #print(res)
 
 
-# import google
-# num_page = 4
-# search_results = google.search("DON JUAN DE DIOS MONTAÑES -calle", tld='es', lang='es', tbs='0', safe='off', num=5, stop=1)
-# for result in search_results:
-#     print(result)
-    # Get the first 20 hits for "Mariposa botnet" in Google Spain
-from google import search
-cad=[]
-url=search('Mariposa botnet', tld='es', lang='es', num=5,stop=5)
-[cad.append(result) for result in url]
-cad=' '.join(cad)
-print(cad)
+try:
+    from google import search
+    cad=[]
+    url=search("GOYA" +" -calle -falla -linkedin -paginasamarillas -facebook", tld='es', lang='es', num=5,stop=5)
+
+    #search_results = google.search(row["nvia"].lower().strip().replace("'","") +" -calle -falla -linkedin -paginasamarillas -facebook", tld='es', lang='es', tbs='0', safe='off', num=5, stop=1)
+
+    [cad.append(result) for result in url]
+    cad=' '.join(cad)
+    print(cad)
+except:
+    print("No se ha podido acceder a Google")
