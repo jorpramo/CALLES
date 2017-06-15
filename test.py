@@ -33,15 +33,35 @@ def search(values, searchFor):
 #print(res)
 
 
-try:
-    from google import search
-    cad=[]
-    url=search("GOYA" +" -calle -falla -linkedin -paginasamarillas -facebook", tld='es', lang='es', num=5,stop=5)
+# try:
+#     from google import search
+#     cad=[]
+#     url=search("FRANCISCO EXIMENIS" +" -calle -falla -linkedin -paginasamarillas -facebook", tld='es', lang='es', num=5,stop=5)
+#
+#     #search_results = google.search(row["nvia"].lower().strip().replace("'","") +" -calle -falla -linkedin -paginasamarillas -facebook", tld='es', lang='es', tbs='0', safe='off', num=5, stop=1)
+#
+#     [cad.append(result) for result in url]
+#     cad=' '.join(cad)
+#     print(cad)
+# except:
+#     print("No se ha podido acceder a Google")
 
-    #search_results = google.search(row["nvia"].lower().strip().replace("'","") +" -calle -falla -linkedin -paginasamarillas -facebook", tld='es', lang='es', tbs='0', safe='off', num=5, stop=1)
+# try:
+#     result=wikipedia.search("FRANCISCO EXIMENIS", results=1)
+#
+#     cad=result[:1]
+#     try:
+#         pag=wikipedia.page(cad)
+#         print(pag.content[:200].lower())
+#         #cat_temp=categoriza(categorias,pag.content[:200].lower())
+#     except:
+#         pass
+# except:
+#     print("No se ha podido acceder a la wikipedia")
+#
+#
 
-    [cad.append(result) for result in url]
-    cad=' '.join(cad)
-    print(cad)
-except:
-    print("No se ha podido acceder a Google")
+from nltk.corpus import stopwords
+from nltk import word_tokenize
+import nltk
+spanish_stops = set(stopwords.words('spanish'))
