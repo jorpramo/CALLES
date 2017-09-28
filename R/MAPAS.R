@@ -9,6 +9,8 @@ library(rworldmap)
 library(RODBC)
 library(stringr)
 library(igraph)
+library(plyr)
+library(doBy)
 
 
 myconn <-odbcConnect("CARRERS", uid="loginR", pwd="loginR")
@@ -17,7 +19,7 @@ municipios <- sqlQuery(myconn, "SELECT CPRO,CMUN, NOMBRE FROM [CARRERS].[dbo].[M
 municipios$CMUN<-str_pad(municipios$CMUN,3,pad = "0")
 municipios$CPRO<-str_pad(municipios$CPRO,2,pad = "0")
 
-par(mfrow=c(2,2))
+#par(mfrow=c(2,2))
 
 spain.limits <- geocode(c("Vivero, Spain","Tenerife, Spain","Menorca, Spain"))
 
@@ -25,24 +27,39 @@ total_fuera<-data.frame(tipo=character(), nombre=character(),latitud=numeric(),l
 
 #hacia fuera, calles en la capital con nombre de población
 for (i in 1:nrow(municipios)) {
-  nombre=municipios[i,]$NOMBRE
-  datos <- sqlQuery(myconn, paste("SELECT '",nombre,"',[TVIA],[NVIA]  , Latitud, longitud   FROM [CARRERS].[dbo].[VIAS] v join dbo.MUNICIPIOS on NVIA=NOMBRE
+  nombre=as.character(municipios[i,]$NOMBRE)
+  datos <- sqlQuery(myconn, paste("SELECT '",nombre,"',[TVIA],[NVIA]  , Latitud, longitud   FROM [CARRERS].[dbo].[VIAS] v join CARRERS.dbo.MUNICIPIOS on NVIA=NOMBRE
                    where v.cmum='",municipios[i,]$CMUN,"' and v.CPRO='",municipios[i,]$CPRO,"'", sep=""))
   total_fuera<-rbind(total_fuera, datos)
 }  
-summary(total_fuera[,1])
+
+resumen_haciafuera<-summary(total_fuera[,1])
+write.csv(unique(total_fuera[,c(1,3,4,5)]),"C:/PYPROYECTOS/CALLES/R/DATOS/total_fuera.csv")
+
+
+
+
+
+table(total_fuera[,1])
 
 total_dentro<-data.frame(tipo=character(), nombre=character(),latitud=numeric(),longitud=numeric(), comunidad=character())
 #hacia dentro
 for (i in 1:nrow(municipios)) {
   nombre=municipios[i,]$NOMBRE
-  datos <- sqlQuery(myconn, paste("SELECT '",nombre,"',[TVIA],m.nombre  , Latitud, longitud  , com.NOMBRE
-FROM [CARRERS].[dbo].[VIAS] v join dbo.MUNICIPIOS m on v.cpro =m.CPRO and m.CMUN=v.cmum 
-                                  join dbo.COMUNIDAD_PROVINCIA com on com.CPRO=m.cpro
+  datos <- sqlQuery(myconn, paste("SELECT '",nombre,"' as ciudad,[TVIA],m.nombre as origen  , Latitud, longitud  , com.NOMBRE as comunidad
+FROM [CARRERS].[dbo].[VIAS] v join CARRERS.dbo.MUNICIPIOS m on v.cpro =m.CPRO and m.CMUN=v.cmum 
+                                  join CARRERS.dbo.COMUNIDAD_PROVINCIA com on com.CPRO=m.cpro
                                   where nvia='",nombre,"'", sep=""))
   total_dentro<-rbind(total_dentro, datos)
 }  
-summary(total_dentro[,1])
+resumen_haciadentro<-summary(total_dentro[,1])
+head(total_dentro)
+write.csv(ddply(total_dentro,c("ciudad","comunidad"), summarise,N=length(comunidad)),"C:/PYPROYECTOS/CALLES/R/DATOS/total_dentro_com.csv")
+write.csv(total_dentro,"C:/PYPROYECTOS/CALLES/R/DATOS/total_dentro.csv")
+
+
+
+class(resumen_haciadentro)
 
 for (i in 1:nrow(municipios)) {
 datos <- sqlQuery(myconn, paste("SELECT [TVIA],[NVIA]  , Latitud, longitud   FROM [CARRERS].[dbo].[VIAS] v join dbo.MUNICIPIOS on NVIA=NOMBRE
