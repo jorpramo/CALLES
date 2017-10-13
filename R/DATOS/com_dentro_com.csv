@@ -1,0 +1,96 @@
+"","comunidad","ciudad","N","total","relativo"
+"1","Andalucía","Barcelona",56,772,0.0725388601036269
+"2","Andalucía","Sevilla",386,772,0.5
+"3","Andalucía","Bilbao",34,772,0.0440414507772021
+"4","Andalucía","Valencia",68,772,0.0880829015544041
+"5","Andalucía","Madrid",113,772,0.146373056994819
+"6","Aragón","Bilbao",3,732,0.00409836065573771
+"7","Aragón","Valencia",35,732,0.0478142076502732
+"8","Aragón","Sevilla",7,732,0.00956284153005465
+"9","Aragón","Madrid",29,732,0.0396174863387978
+"10","Aragón","Barcelona",12,732,0.0163934426229508
+"11","Asturias, Principado de","Madrid",4,79,0.0506329113924051
+"12","Asturias, Principado de","Valencia",2,79,0.0253164556962025
+"13","Balears, Illes","Bilbao",3,67,0.0447761194029851
+"14","Balears, Illes","Sevilla",5,67,0.0746268656716418
+"15","Balears, Illes","Valencia",10,67,0.149253731343284
+"16","Balears, Illes","Barcelona",9,67,0.134328358208955
+"17","Balears, Illes","Madrid",9,67,0.134328358208955
+"18","Canarias","Sevilla",9,89,0.101123595505618
+"19","Canarias","Valencia",13,89,0.146067415730337
+"20","Canarias","Barcelona",10,89,0.112359550561798
+"21","Canarias","Bilbao",5,89,0.0561797752808989
+"22","Canarias","Madrid",12,89,0.134831460674157
+"23","Cantabria","Bilbao",2,104,0.0192307692307692
+"24","Cantabria","Madrid",3,104,0.0288461538461538
+"25","Cantabria","Valencia",1,104,0.00961538461538462
+"26","Cantabria","Sevilla",1,104,0.00961538461538462
+"27","Cantabria","Barcelona",1,104,0.00961538461538462
+"28","Castilla-La Mancha","Bilbao",8,922,0.00867678958785249
+"29","Castilla-La Mancha","Valencia",88,922,0.0954446854663774
+"30","Castilla-La Mancha","Sevilla",45,922,0.0488069414316703
+"31","Castilla-La Mancha","Madrid",147,922,0.15943600867679
+"32","Castilla-La Mancha","Barcelona",27,922,0.0292841648590022
+"33","Castilla y León","Bilbao",20,2256,0.00886524822695036
+"34","Castilla y León","Sevilla",22,2256,0.00975177304964539
+"35","Castilla y León","Madrid",111,2256,0.0492021276595745
+"36","Castilla y León","Valencia",32,2256,0.0141843971631206
+"37","Castilla y León","Barcelona",21,2256,0.00930851063829787
+"38","Cataluña","Sevilla",27,951,0.028391167192429
+"39","Cataluña","Madrid",26,951,0.0273396424815983
+"40","Cataluña","Bilbao",18,951,0.0189274447949527
+"41","Cataluña","Barcelona",291,951,0.305993690851735
+"42","Cataluña","Valencia",74,951,0.0778128286014721
+"43","Ceuta","Sevilla",1,1,1
+"44","Comunitat Valenciana","Madrid",66,543,0.121546961325967
+"45","Comunitat Valenciana","Bilbao",21,543,0.0386740331491713
+"46","Comunitat Valenciana","Valencia",276,543,0.50828729281768
+"47","Comunitat Valenciana","Barcelona",54,543,0.0994475138121547
+"48","Comunitat Valenciana","Sevilla",45,543,0.0828729281767956
+"49","Extremadura","Bilbao",1,389,0.0025706940874036
+"50","Extremadura","Valencia",18,389,0.0462724935732648
+"51","Extremadura","Sevilla",49,389,0.125964010282776
+"52","Extremadura","Madrid",26,389,0.0668380462724936
+"53","Extremadura","Barcelona",3,389,0.0077120822622108
+"54","Galicia","Bilbao",1,317,0.00315457413249211
+"55","Galicia","Sevilla",3,317,0.00946372239747634
+"56","Galicia","Valencia",4,317,0.0126182965299685
+"57","Galicia","Madrid",10,317,0.0315457413249211
+"58","Galicia","Barcelona",6,317,0.0189274447949527
+"59","Madrid, Comunidad de","Bilbao",14,181,0.0773480662983425
+"60","Madrid, Comunidad de","Sevilla",38,181,0.209944751381215
+"61","Madrid, Comunidad de","Valencia",23,181,0.12707182320442
+"62","Madrid, Comunidad de","Madrid",71,181,0.392265193370166
+"63","Madrid, Comunidad de","Barcelona",15,181,0.0828729281767956
+"64","Melilla","Bilbao",1,1,1
+"65","Melilla","Madrid",2,1,2
+"66","Melilla","Valencia",1,1,1
+"67","Murcia, Región de","Sevilla",16,46,0.347826086956522
+"68","Murcia, Región de","Valencia",18,46,0.391304347826087
+"69","Murcia, Región de","Madrid",20,46,0.434782608695652
+"70","Murcia, Región de","Bilbao",3,46,0.0652173913043478
+"71","Murcia, Región de","Barcelona",16,46,0.347826086956522
+"72","Navarra, Comunidad Foral de","Barcelona",1,274,0.00364963503649635
+"73","Navarra, Comunidad Foral de","Madrid",7,274,0.0255474452554745
+"74","Navarra, Comunidad Foral de","Bilbao",2,274,0.0072992700729927
+"75","País Vasco","Bilbao",5,251,0.0199203187250996
+"76","País Vasco","Barcelona",1,251,0.00398406374501992
+"77","País Vasco","Madrid",4,251,0.0159362549800797
+"78","País Vasco","Valencia",2,251,0.00796812749003984
+"79","Rioja, La","Valencia",2,174,0.0114942528735632
+"80","Rioja, La","Madrid",8,174,0.0459770114942529
+"81","Rioja, La","Sevilla",3,174,0.0172413793103448
+"161","Melilla","Barcelona",0,1,0
+"171","Asturias, Principado de","Barcelona",0,79,0
+"181","Rioja, La","Barcelona",0,174,0
+"191","Ceuta","Barcelona",0,1,0
+"172","Asturias, Principado de","Bilbao",0,79,0
+"182","Rioja, La","Bilbao",0,174,0
+"192","Ceuta","Bilbao",0,1,0
+"141","Navarra, Comunidad Foral de","Valencia",0,274,0
+"193","Ceuta","Valencia",0,1,0
+"194","Ceuta","Madrid",0,1,0
+"142","Navarra, Comunidad Foral de","Sevilla",0,274,0
+"151","País Vasco","Sevilla",0,251,0
+"162","Melilla","Sevilla",0,1,0
+"173","Asturias, Principado de","Sevilla",0,79,0
