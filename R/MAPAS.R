@@ -2,6 +2,9 @@
 # install.packages("RODBC")
 # install.packages("rworldmap")
 # install.packages("igraph")
+#install.packages("reshape")
+
+library(reshape)
 library(ggmap)
 library("RODBC")
 
@@ -13,37 +16,61 @@ library(plyr)
 library(doBy)
 
 
+setwd('E:/PYPROYECTOS/CALLES2/R/DATOS')
+
 myconn <-odbcConnect("CARRERS", uid="loginR", pwd="loginR")
 
 municipios <- sqlQuery(myconn, "SELECT CPRO,CMUN, NOMBRE FROM [CARRERS].[dbo].[MUNICIPIOS] where nombre in ('Valencia','Madrid','Barcelona','Sevilla','Bilbao')")
 municipios$CMUN<-str_pad(municipios$CMUN,3,pad = "0")
 municipios$CPRO<-str_pad(municipios$CPRO,2,pad = "0")
 
+pobles_com <- sqlQuery(myconn, paste("SELECT count(*), com.nombre from CARRERS.dbo.MUNICIPIOS m 
+                                join CARRERS.dbo.COMUNIDAD_PROVINCIA com on com.CPRO=m.cpro
+                                     group by com.nombre", sep=""))
+colnames(pobles_com)<-c("total","comunidad")
+
 #par(mfrow=c(2,2))
 
 spain.limits <- geocode(c("Vivero, Spain","Tenerife, Spain","Menorca, Spain"))
 
-total_fuera<-data.frame(tipo=character(), nombre=character(),latitud=numeric(),longitud=numeric())
+total_fuera<-data.frame(tipo=character(), nombre=character(),latitud=numeric(),longitud=numeric(), comunidad=character())
 
 #hacia fuera, calles en la capital con nombre de población
 for (i in 1:nrow(municipios)) {
   nombre=as.character(municipios[i,]$NOMBRE)
-  datos <- sqlQuery(myconn, paste("SELECT '",nombre,"',[TVIA],[NVIA]  , Latitud, longitud   FROM [CARRERS].[dbo].[VIAS] v join CARRERS.dbo.MUNICIPIOS on NVIA=NOMBRE
-                   where v.cmum='",municipios[i,]$CMUN,"' and v.CPRO='",municipios[i,]$CPRO,"'", sep=""))
+  datos <- sqlQuery(myconn, paste("SELECT '",nombre,"' as ciudad,[TVIA],[NVIA]  , Latitud, longitud, com.NOMBRE    FROM [CARRERS].[dbo].[VIAS] v join CARRERS.dbo.MUNICIPIOS m on NVIA=NOMBRE
+                   join carrers.dbo.COMUNIDAD_PROVINCIA com on com.CPRO=m.cpro  where v.cmum='",municipios[i,]$CMUN,"' and v.CPRO='",municipios[i,]$CPRO,"'", sep=""))
   total_fuera<-rbind(total_fuera, datos)
 }  
 
-resumen_haciafuera<-summary(total_fuera[,1])
+head(total_fuera)
+com_haciafuera<-ddply(total_fuera,c("ciudad","NOMBRE"), summarise,N=length(NOMBRE))
+colnames(com_haciafuera)<-c("ciudad","comunidad","total")
+com_pueblos_fuera<-merge(com_haciafuera, pobles_com, by="comunidad",all.y=TRUE)
+com_pueblos_fuera$relativo=com_pueblos_fuera$total.x/com_pueblos_fuera$total.y
+
+for (i in 1:nrow(municipios)) {
+  temp<-merge(com_pueblos_fuera[com_pueblos_fuera$ciudad==municipios[i,]$NOMBRE,], pobles_com, by ="comunidad",all.y=TRUE)
+  temp<-temp[!complete.cases(temp), ]
+  temp$total.x<-temp$total.y
+  temp$ciudad<-municipios[i,]$NOMBRE
+  temp[is.na(temp)]<-0
+  temp<-temp[,-c(6)]
+  colnames(temp)<-colnames(com_pueblos_fuera)
+  com_pueblos_fuera<-rbind(com_pueblos_fuera,temp)
+}
+
+
 write.csv(unique(total_fuera[,c(1,3,4,5)]),"C:/PYPROYECTOS/CALLES/R/DATOS/total_fuera.csv")
 
 
+write.csv(com_pueblos_fuera,"com_fuera_com.csv")
+write.csv(total_fuera,"total_fuera.csv")
 
-
-
-table(total_fuera[,1])
 
 total_dentro<-data.frame(tipo=character(), nombre=character(),latitud=numeric(),longitud=numeric(), comunidad=character())
-#hacia dentro
+
+#hacia dentro . calles en diferentes municipios con nombre de la ciudad
 for (i in 1:nrow(municipios)) {
   nombre=municipios[i,]$NOMBRE
   datos <- sqlQuery(myconn, paste("SELECT '",nombre,"' as ciudad,[TVIA],m.nombre as origen  , Latitud, longitud  , com.NOMBRE as comunidad
@@ -52,14 +79,55 @@ FROM [CARRERS].[dbo].[VIAS] v join CARRERS.dbo.MUNICIPIOS m on v.cpro =m.CPRO an
                                   where nvia='",nombre,"'", sep=""))
   total_dentro<-rbind(total_dentro, datos)
 }  
+
+
 resumen_haciadentro<-summary(total_dentro[,1])
-head(total_dentro)
-write.csv(ddply(total_dentro,c("ciudad","comunidad"), summarise,N=length(comunidad)),"C:/PYPROYECTOS/CALLES/R/DATOS/total_dentro_com.csv")
-write.csv(total_dentro,"C:/PYPROYECTOS/CALLES/R/DATOS/total_dentro.csv")
+com_haciadentro<-ddply(total_dentro,c("ciudad","comunidad"), summarise,N=length(comunidad))
+com_pueblos<-merge(com_haciadentro, pobles_com, by="comunidad",all.y=TRUE)
+com_pueblos$relativo=com_pueblos$N/com_pueblos$total
+
+for (i in 1:nrow(municipios)) {
+  temp<-merge(com_pueblos[com_pueblos$ciudad==municipios[i,]$NOMBRE,], pobles_com, by ="comunidad",all.y=TRUE)
+  temp<-temp[!complete.cases(temp), ]
+  temp$total.x<-temp$total.y
+  temp$ciudad<-municipios[i,]$NOMBRE
+  temp[is.na(temp)]<-0
+  temp<-temp[,-c(6)]
+  colnames(temp)<-colnames(com_pueblos)
+  com_pueblos<-rbind(com_pueblos,temp)
+}
 
 
+write.csv(com_pueblos,"com_dentro_com.csv")
+write.csv(total_dentro,"total_dentro.csv")
 
-class(resumen_haciadentro)
+
+final<-merge(com_pueblos_fuera, com_pueblos, by=c("comunidad","ciudad"))
+colnames(final)<-c("comunidad","ciudad","calles_fuera","total_pueblos","relativo_fuera","calles_dentro","t","relativo_dentro")
+final$relativo_dentro<-final$relativo_dentro*100
+final$relativo_fuera<-final$relativo_fuera*100
+
+final$dif<-final$relativo_fuera - final$relativo_dentro
+
+
+resumen <- cast(final[,c("comunidad","ciudad","dif")], comunidad~ciudad, mean)
+resumen<-resumen[!(resumen$comunidad %in% c("Ceuta","Melilla")),]
+
+write.csv(final,"final.csv")
+
+for (i in 1:nrow(final)) {
+ print(paste("['",final[i,]$comunidad,"','",final[i,]$ciudad,"',",final[i,]$calles_dentro,"]",sep=""), row.names = FALSE)
+}
+for (i in 1:nrow(final)) {
+  print(paste("['",final[i,]$ciudad,"','",final[i,]$comunidad," ',",final[i,]$calles_fuera,"]",sep=""), row.names = FALSE)
+}
+for (i in 1:nrow(final)) {
+  print(paste("['",final[i,]$comunidad,"','",final[i,]$ciudad,"',",final[i,]$relativo_dentro,"]",sep=""), row.names = FALSE)
+}
+for (i in 1:nrow(final)) {
+  print(paste("['",final[i,]$ciudad,"','",final[i,]$comunidad," ',",final[i,]$relativo_fuera,"]",sep=""), row.names = FALSE)
+}
+
 
 for (i in 1:nrow(municipios)) {
 datos <- sqlQuery(myconn, paste("SELECT [TVIA],[NVIA]  , Latitud, longitud   FROM [CARRERS].[dbo].[VIAS] v join dbo.MUNICIPIOS on NVIA=NOMBRE
