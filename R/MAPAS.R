@@ -16,7 +16,8 @@ library(plyr)
 library(doBy)
 
 
-setwd('E:/PYPROYECTOS/CALLES2/R/DATOS')
+#setwd('E:/PYPROYECTOS/CALLES2/R/DATOS')
+setwd('C:/PYPROYECTOS/CALLES/R/DATOS')
 
 myconn <-odbcConnect("CARRERS", uid="loginR", pwd="loginR")
 
@@ -181,3 +182,9 @@ max(comunidades$membership)
 plot(comunidades, g, vertex.size=4, vertex.label.cex=0.5)
 
 # close(myconn)
+
+
+distribucion_mad <- sqlQuery(myconn, "SELECT habitantes  FROM CARRERS.[dbo].[VIAS] v join CARRERS.[dbo].[MUNICIPIOS] m on v.cpro=m.CPRO and cmum=m.CMUN  where nvia='Valencia'")
+hist(distribucion_mad$habitantes)
+summary(distribucion_mad)
+hist(distribucion_mad[distribucion_mad$habitantes<21587,])
